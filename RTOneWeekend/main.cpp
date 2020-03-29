@@ -7,7 +7,7 @@
 
 #include <vector>
 
-bool hit_sphere(const vec3& center, real radius, const ray& r)
+real hit_sphere(const vec3& center, real radius, const ray& r)
 {
 	vec3 oc = r.origin - center;
 	real a = dot(r.dir, r.dir);
@@ -15,19 +15,26 @@ bool hit_sphere(const vec3& center, real radius, const ray& r)
 	real c = dot(oc, oc) - radius * radius;
 	real discriminant = b * b - 4 * a * c;
 
-	return discriminant > 0;
+	if (discriminant < 0) {
+		return -1.0f;
+	}
+	else {
+		return (-b - sqrt(discriminant)) / (2.0f * a);
+	}
 }
 
 vec3 ray_color(const ray& r)
 {
-	if (hit_sphere(vec3(0, 0, -1.0f), 0.5f, r))
+	real t = hit_sphere(vec3(0, 0, -1.0f), 0.5f, r);
+	if (t > 0.0f) 
 	{
-		return vec3(1.0f, 0.0f, 0.0f);
+		vec3 N = normalize(ray_at(r, t) - vec3(0, 0, -1.0f));
+		return 0.5f * (N + vec3(1.0));
 	}
 
-	vec3 unit_dir = (r.dir);
-	real t = 0.5f * (unit_dir.y + 1.0f);
-	return (1.0f - t) * vec3(1.0f, 1.0f, 1.0f) + t * vec3(0.5f, 0.7f, 1.0f);
+	vec3 unit_dir = normalize(r.dir);
+	real e = 0.5f * (unit_dir.y + 1.0f);
+	return (1.0f - e) * vec3(1.0f, 1.0f, 1.0f) + e * vec3(0.5f, 0.7f, 1.0f);
 }
 
 void write_color_rgba(int32_t x, int32_t y, uint32_t image_width, uint32_t image_height,
