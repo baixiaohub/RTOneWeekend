@@ -29,5 +29,8 @@
     <ClInclude Include="image_io.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="math_vec.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

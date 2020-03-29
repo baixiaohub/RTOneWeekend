@@ -1,4 +1,5 @@
 #include "image_io.h"
+#include "math_vec.h"
 
 #include <stdint.h>
 #include <assert.h>
@@ -18,7 +19,7 @@ int main()
 	std::vector<uint8_t> data(IMAGE_PIXEL_BYTES);
 	for (uint32_t y = 0; y < IMAGE_HEIGHT; ++y)
 	{
-		fprintf(stderr, "frame scanline: %u\n", y);
+		fprintf(stderr, "Scanlines remaining: %u\n", y);
 		for (uint32_t x = 0; x < IMAGE_WIDTH; ++x)
 		{
 			uint64_t offset = (y * IMAGE_WIDTH + x) * IMAGE_CHANNELS;
@@ -27,9 +28,12 @@ int main()
 			float g = 1.0f * y / IMAGE_HEIGHT;
 			float b = 0.2f;
 
-			uint8_t ir = (uint8_t)(255.999f * r);
-			uint8_t ig = (uint8_t)(255.999f * g);
-			uint8_t ib = (uint8_t)(255.999f * b);
+			vec3 color(r, g, b);
+			color = vec3_pow(color, 2.2f);
+
+			uint8_t ir = (uint8_t)(255.999f * color.x);
+			uint8_t ig = (uint8_t)(255.999f * color.y);
+			uint8_t ib = (uint8_t)(255.999f * color.z);
 
 			data[offset] = ir;//r
 			data[offset + 1] = ig;//g
