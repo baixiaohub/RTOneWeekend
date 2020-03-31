@@ -11,15 +11,15 @@ real hit_sphere(const vec3& center, real radius, const ray& r)
 {
 	vec3 oc = r.origin - center;
 	real a = dot(r.dir, r.dir);
-	real b = 2.0f * dot(oc, r.dir);
+	real half_b = dot(oc, r.dir);
 	real c = dot(oc, oc) - radius * radius;
-	real discriminant = b * b - 4 * a * c;
+	real discriminant = half_b * half_b - a * c;
 
 	if (discriminant < 0) {
 		return -1.0f;
 	}
 	else {
-		return (-b - sqrt(discriminant)) / (2.0f * a);
+		return (-half_b - sqrt(discriminant)) / a;
 	}
 }
 
